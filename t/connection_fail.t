@@ -15,8 +15,7 @@ my $timer_cb_calls = 0;
     my $r = UV::tcp_connect($tcp, '127.0.0.1', empty_port(), sub {
         my ($status) = @_;
 
-        is $status, -1, 'error status ok';
-        is UV::last_error(), UV::ECONNREFUSED(), 'ECONNREFUSED ok';
+        is $status, UV::ECONNREFUSED(), 'ECONNREFUSED ok';
 
         $connect_cb_calls++;
 
@@ -37,8 +36,7 @@ $connect_cb_calls = 0;
     UV::tcp_connect($tcp, '127.0.0.1', empty_port(), sub {
         my ($status) = @_;
 
-        is $status, -1, 'error status ok';
-        is UV::last_error(), UV::ECONNREFUSED(), 'ECONNREFUSED ok';
+        is $status, UV::ECONNREFUSED(), 'ECONNREFUSED ok';
 
         $connect_cb_calls++;
 
