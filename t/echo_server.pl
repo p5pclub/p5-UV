@@ -5,18 +5,22 @@ use UV;
 my $port = $ARGV[0] || 0;
 
 my $server = UV::tcp_init();
-UV::tcp_bind($server, '0.0.0.0', $port) and die UV::strerror(UV::last_error());
-UV::listen($server, 128, sub {
+my $ret;
+
+$ret = UV::tcp_bind($server, '0.0.0.0', $port);
+die UV::strerror($ret) if $ret < 0;
+
+$ret = UV::listen($server, 128, sub {
     my $client = UV::tcp_init();
-    UV::accept($server, $client) and die UV::strerror(UV::last_error());
+    $ret = UV::accept($server, $client);
+    die UV::strerror($ret) if $ret < 0;
 
     UV::read_start($client, sub {
         my ($nread, $buf) = @_;
 
         if ($nread < 0) {
-            my $err = UV::last_error();
-            if ($err != UV::EOF) {
-                warn UV::strerror($err);
+            if ($nread != UV::EOF) {
+                warn UV::strerror($nread);
             }
             UV::close($client);
         }
@@ -25,6 +29,7 @@ UV::listen($server, 128, sub {
         }
     });
 
-}) and die UV::strerror(UV::last_error());
+});
+die UV::strerror($ret) if $ret < 0;
 
 UV::run();
