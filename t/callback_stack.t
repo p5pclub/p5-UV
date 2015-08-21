@@ -44,33 +44,28 @@ my $shutdown_cb = sub {
 my $read_cb = sub {
     my ($nread, $buf) = @_;
 
-    if ($nread == 0) {
-        is UV::last_error(), UV::EAGAIN(), 'err is EAGAIN ok';
-        return;
-    }
-    elsif ($nread == -1) {
-        is UV::last_error(), UV::EOF(), 'eof ok';
+    if ($nread < 0) {
+        if ($nread == UV::EAGAIN()) {
+            return;
+        } elsif ($nread == UV::EOF()) {
+            $nested++;
+            UV::close($client);
+            $nested--;
+            return;
+        }
+        fail sprintf("Unexpected error: <%s>%s",$nread,UV::strerror($nread));
+    } else {
+        $bytes_received += $nread;
 
-        $nested++;
-        UV::close($client);
-        $nested--;
-
-        return;
-    }
-
-    $bytes_received += $nread;
-
-    if ($bytes_received == length $MESSAGE) {
-        $nested++;
-        UV::shutdown($client, $shutdown_cb) and die 'uv_shutdown failed';
-        $nested--;
+        if ($bytes_received == length $MESSAGE) {
+            $nested++;
+            UV::shutdown($client, $shutdown_cb) and die 'uv_shutdown failed';
+            $nested--;
+        }
     }
 };
 
 my $timer_cb = sub {
-    my ($status) = @_;
-
-    is $status, 0, 'timer status ok';
     is $nested, 0, 'timer_cb must be called from a fresh stack ok';
 
     $nested++;
