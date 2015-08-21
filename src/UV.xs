@@ -10,8 +10,8 @@
 
 #include <uv.h>
 
-#define UV_ERRNO_CONST_GEN(val, name) \
-    newCONSTSUB(stash, #name, newSViv(val));
+#define UV_ERRNO_CONST_GEN(val, descr) \
+    newCONSTSUB(stash, #val, newSViv(val));
 
 #define UV_CONST_GEN(uc, lc) \
     newCONSTSUB(stash, #uc, newSViv(UV_##uc));    \
