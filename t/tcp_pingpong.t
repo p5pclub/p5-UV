@@ -23,11 +23,11 @@ UV::listen($tcp_server, 10, sub {
         my ($nread, $buf) = @_;
 
         if ($nread < 0) {
-            if (UV::EOF() == UV::last_error()) {
+            if ($nread == UV::EOF()) {
                 pass "eof ok";
             }
             else {
-                fail "not eof, something error: " . UV::last_error();
+                fail sprintf("not eof, something error: %s,%s",$nread,UV::err_name($r));
             }
 
             UV::close($con);
