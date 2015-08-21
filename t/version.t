@@ -17,6 +17,6 @@ is $major, $v1;
 is $minor, $v2;
 is $patch, $v3;
 
-is $version_str, '0.10.2';
+is $version_str, "$major.$minor.$patch";
 
 done_testing
