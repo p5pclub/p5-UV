@@ -721,9 +721,11 @@ CODE:
     sv = sv_2mortal(newRV_inc((SV*)hv));
 
     sv_bless(sv, gv_stashpv("UV::loop", 1));
-
-    sv_magic((SV*)hv, NULL, PERL_MAGIC_ext, NULL, 0);
-    mg_find((SV*)hv, PERL_MAGIC_ext)->mg_obj = (SV*)uv_default_loop();
+    sv_magic((SV*)hv,
+             (SV*)uv_default_loop(),
+             PERL_MAGIC_ext,
+             NULL,
+             0);
 
     ST(0) = sv;
     XSRETURN(1);
