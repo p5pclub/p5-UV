@@ -11,7 +11,7 @@
 #include <uv.h>
 
 #define UV_ERRNO_CONST_GEN(val, descr) \
-    newCONSTSUB(stash, #val, newSViv(val));
+    newCONSTSUB(stash, #val, newSViv(UV_##val));
 
 #define UV_CONST_GEN(uc, lc) \
     newCONSTSUB(stash, #uc, newSViv(UV_##uc));    \
