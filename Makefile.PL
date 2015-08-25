@@ -53,7 +53,7 @@ elsif ($^O eq 'darwin') {
     cc_libs 'm', 'pthread';
     makemaker_args->{dynamic_lib} = {
         OTHERLDFLAGS => '-framework CoreServices',
-    }
+    };
     cc_append_to_ccflags '-g -fPIC';
 }
 elsif ($^O =~ /^(gnuk)?freebsd$/ || $^O eq 'netbsd' || $^O eq 'openbsd') {
