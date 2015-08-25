@@ -47,22 +47,18 @@ auto_set_repository;
 
 if ($^O eq 'linux') {
     cc_libs 'm', 'dl', 'rt', 'pthread';
-    cc_append_to_ccflags '-g -fPIC';
 }
 elsif ($^O eq 'darwin') {
     cc_libs 'm', 'pthread';
     makemaker_args->{dynamic_lib} = {
         OTHERLDFLAGS => '-framework CoreServices',
     };
-    cc_append_to_ccflags '-g -fPIC';
 }
 elsif ($^O =~ /^(gnuk)?freebsd$/ || $^O eq 'netbsd' || $^O eq 'openbsd') {
     cc_libs 'm', 'kvm', 'pthread';
-    cc_append_to_ccflags '-g -fPIC';
 }
 elsif ($^O eq 'sunos' || $^O eq 'solaris') {
     cc_libs 'm', 'kstat', 'nsl', 'sendfile', 'socket', 'pthreads';
-    cc_append_to_ccflags '-g -fPIC';
 }
 elsif ($^O eq 'MSWin32') {
     cc_append_to_ccflags '-D_WIN32_WINNT=0x600'; # https://github.com/joyent/libuv/issues/263
@@ -70,6 +66,10 @@ elsif ($^O eq 'MSWin32') {
 }
 else {
     die "$^O is unsupported at this point\n";
+}
+
+unless ($^O eq 'MSWin32') {
+    cc_append_to_ccflags '-g -fPIC -Wall';
 }
 
 makemaker_args->{MYEXTLIB} = 'deps/libuv/libuv$(LIB_EXT)';
