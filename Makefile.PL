@@ -69,17 +69,18 @@ else {
 }
 
 unless ($^O eq 'MSWin32') {
-    cc_append_to_ccflags '-g -fPIC -Wall';
+    cc_append_to_ccflags '-g -fPIC';
 }
 
-makemaker_args->{MYEXTLIB} = 'deps/libuv/libuv$(LIB_EXT)';
+makemaker_args->{MYEXTLIB} = 'deps/libuv/.libs/libuv$(LIB_EXT)';
 
 {
     package MY;
     sub postamble {
         <<'__EOF__';
 $(MYEXTLIB):
-	$(MAKE) -C deps/libuv
+		cd deps/libuv/; sh autogen.sh; ./configure --with-pic; cd -
+		$(MAKE) -C deps/libuv
 __EOF__
     }
 }

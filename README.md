@@ -20,7 +20,6 @@ Supported functions is:
 
 * `uv_run` (`UV::run`)
 * `uv_version` (`UV::version`)
-* `uv_last_error` (`UV::last_error`)
 * `uv_strerror` (`UV::strerror`)
 * `uv_err_name` (`UV::err_name`)
 * `uv_shutdown` (`UV::shutdown`)
