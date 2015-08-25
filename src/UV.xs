@@ -1580,7 +1580,6 @@ CODE:
     int i, r;
     HV* hv;
     AV* av;
-    SV** s;
     char buf[512];
 
     int err = uv_interface_addresses(&addresses, &count);
@@ -1591,17 +1590,21 @@ CODE:
         for (i = 0; i < count; i++) {
             hv = (HV*)sv_2mortal((SV*)newHV());
 
-            s = hv_store(hv, "is_internal", 11, newSViv(addresses[i].is_internal), 0);
+            if (!hv_store(hv, "is_internal", 11, newSViv(addresses[i].is_internal), 0))
+                croak("Internal Error <%s:%d>: hv_store_failed", __FILE__,__LINE__);
 
-            s = hv_store(hv, "name", 4, newSVpv(addresses[i].name, 0), 0);
+            if (!hv_store(hv, "name", 4, newSVpv(addresses[i].name, 0), 0))
+                croak("Internal Error <%s:%d>: hv_store_failed", __FILE__,__LINE__);
 
             r = uv_ip4_name(&addresses[i].address.address4, buf, 512);
             assert(0 == r);
-            s = hv_store(hv, "address4", 8, newSVpv(buf, 0), 0);
+            if (!hv_store(hv, "address4", 8, newSVpv(buf, 0), 0))
+                croak("Internal Error <%s:%d>: hv_store_failed", __FILE__,__LINE__);
 
             r = uv_ip6_name(&addresses[i].address.address6, buf, 512);
             assert(0 == r);
-            s = hv_store(hv, "address6", 8, newSVpv(buf, 0), 0);
+            if (!hv_store(hv, "address6", 8, newSVpv(buf, 0), 0))
+                croak("Internal Error <%s:%d>: hv_store_failed", __FILE__,__LINE__);
 
             av_push(av, newRV_inc((SV*)hv));
         }
