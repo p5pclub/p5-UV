@@ -754,6 +754,12 @@ CODE:
 OUTPUT:
     RETVAL
 
+void
+uv_update_time()
+CODE:
+{
+    uv_update_time(uv_default_loop());
+}
 
 const char*
 uv_strerror(int err)

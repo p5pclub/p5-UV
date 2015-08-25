@@ -19,6 +19,8 @@ Not all functions implemented at this time.
 Supported functions is:
 
 * `uv_run` (`UV::run`)
+* `uv_now` (`UV::now`)
+* `uv_update_time` (`UV::now`)
 * `uv_version` (`UV::version`)
 * `uv_strerror` (`UV::strerror`)
 * `uv_err_name` (`UV::err_name`)
